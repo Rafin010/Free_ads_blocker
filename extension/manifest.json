@@ -46,7 +46,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content/content.js", "content/cosmetic-filter.js"],
+      "js": ["content/content.js", "content/cosmetic-filter.js", "content/adult-blocker.js"],
       "run_at": "document_start",
       "all_frames": true
     },
@@ -107,7 +107,7 @@
   "default_locale": "en",
 
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
+    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;"
   },
 
   "minimum_chrome_version": "110",

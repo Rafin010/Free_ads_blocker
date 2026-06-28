@@ -1,9 +1,7 @@
 /**
  * Free Blocker — Toggle Component
- * Creates an animated toggle switch with ripple effect.
+ * Creates an animated toggle switch with pure CSS.
  */
-
-import { createElement, addRippleEffect } from '../utils/helpers.js';
 
 export class ToggleComponent {
   /**
@@ -15,41 +13,23 @@ export class ToggleComponent {
    * @returns {HTMLElement} Toggle label element
    */
   static create({ id, checked = false, onChange }) {
-    /* 
-     * Tailwind classes for toggle wrapper:
-     * relative inline-flex items-center cursor-pointer
-     */
-    const label = createElement('label', { 
-      className: 'relative inline-flex items-center cursor-pointer fb-toggle-wrapper',
-      htmlFor: id
-    });
+    const label = document.createElement('label');
+    label.className = 'fb-toggle';
+    label.setAttribute('for', id);
 
-    /* Hide default checkbox */
-    const input = createElement('input', {
-      type: 'checkbox',
-      id: id,
-      className: 'sr-only peer',
-      checked: checked
-    });
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.id = id;
+    input.className = 'fb-toggle-input';
+    input.checked = checked;
 
-    /* 
-     * Tailwind classes for toggle track and thumb:
-     * - Track: w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-indigo-600
-     */
-    const track = createElement('div', {
-      className: `
-        w-11 h-6 bg-slate-300 rounded-full peer 
-        dark:bg-slate-700 
-        peer-checked:after:translate-x-full peer-checked:after:border-white 
-        after:content-[''] after:absolute after:top-[2px] after:left-[2px] 
-        after:bg-white after:border-slate-300 after:border after:rounded-full 
-        after:h-5 after:w-5 after:transition-all 
-        dark:border-slate-600 
-        peer-checked:bg-indigo-500 hover:peer-checked:bg-indigo-600
-        transition-colors duration-300 ease-in-out
-        shadow-inner
-      `
-    });
+    const track = document.createElement('span');
+    track.className = 'fb-toggle-track';
+
+    const thumb = document.createElement('span');
+    thumb.className = 'fb-toggle-thumb';
+
+    track.appendChild(thumb);
 
     input.addEventListener('change', (e) => {
       if (typeof onChange === 'function') {
@@ -59,20 +39,6 @@ export class ToggleComponent {
 
     label.appendChild(input);
     label.appendChild(track);
-    
-    /* Add ripple on click */
-    label.addEventListener('mousedown', (e) => {
-       /* Custom ripple implementation for toggle */
-       const ripple = createElement('span', {
-         className: 'absolute w-10 h-10 bg-indigo-400/30 rounded-full transform -translate-x-1/2 -translate-y-1/2 pointer-events-none animate-ping duration-300',
-         style: {
-           left: input.checked ? '100%' : '0%',
-           top: '50%'
-         }
-       });
-       label.appendChild(ripple);
-       setTimeout(() => ripple.remove(), 300);
-    });
 
     return label;
   }

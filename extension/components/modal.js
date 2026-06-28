@@ -1,14 +1,13 @@
 /**
  * Free Blocker — Modal Component
- * Reusable modal dialog for confirmations and inputs.
+ * Reusable modal dialog for confirmations and inputs. Pure CSS.
  */
-
-import { createElement } from '../utils/helpers.js';
 
 export class ModalManager {
   constructor() {
     this._modalElement = null;
     this._overlayElement = null;
+    this._containerElement = null;
   }
 
   /**
@@ -29,16 +28,12 @@ export class ModalManager {
         buttons: [
           {
             text: cancelText,
-            className: 'px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 dark:text-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-lg transition-colors',
+            className: 'fb-modal-btn fb-modal-btn--cancel',
             onClick: () => resolve(false)
           },
           {
             text: confirmText,
-            className: `px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors ${
-              danger 
-                ? 'bg-rose-500 hover:bg-rose-600 shadow-rose-500/30' 
-                : 'bg-indigo-500 hover:bg-indigo-600 shadow-indigo-500/30'
-            } shadow-md`,
+            className: danger ? 'fb-modal-btn fb-modal-btn--danger' : 'fb-modal-btn fb-modal-btn--confirm',
             onClick: () => resolve(true)
           }
         ],
@@ -61,13 +56,14 @@ export class ModalManager {
     return new Promise((resolve) => {
       let inputValue = defaultValue;
 
-      const inputContainer = createElement('div', { className: 'mt-4' });
-      const input = createElement('input', {
-        type: 'text',
-        className: 'w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent',
-        placeholder,
-        value: defaultValue
-      });
+      const inputContainer = document.createElement('div');
+      inputContainer.className = 'fb-modal-input-wrap';
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'fb-modal-input';
+      input.placeholder = placeholder;
+      input.value = defaultValue;
 
       input.addEventListener('input', (e) => {
         inputValue = e.target.value;
@@ -82,12 +78,12 @@ export class ModalManager {
         buttons: [
           {
             text: 'Cancel',
-            className: 'px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 dark:text-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-lg transition-colors',
+            className: 'fb-modal-btn fb-modal-btn--cancel',
             onClick: () => resolve(null)
           },
           {
             text: confirmText,
-            className: 'px-4 py-2 text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 shadow-md shadow-indigo-500/30 rounded-lg transition-colors',
+            className: 'fb-modal-btn fb-modal-btn--confirm',
             onClick: () => resolve(inputValue)
           }
         ],
@@ -104,40 +100,35 @@ export class ModalManager {
     this._close(); // Ensure any existing is closed
 
     /* Overlay */
-    this._overlayElement = createElement('div', {
-      className: 'fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 transition-opacity opacity-0',
-      id: 'fb-modal-overlay'
-    });
+    this._overlayElement = document.createElement('div');
+    this._overlayElement.className = 'fb-modal-overlay';
+    this._overlayElement.id = 'fb-modal-overlay';
 
     /* Modal Container */
-    const modalContainer = createElement('div', {
-      className: 'fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none'
-    });
+    this._containerElement = document.createElement('div');
+    this._containerElement.className = 'fb-modal-container';
 
     /* Modal Box */
-    this._modalElement = createElement('div', {
-      className: 'bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform scale-95 opacity-0 transition-all pointer-events-auto border border-slate-200 dark:border-slate-700'
-    });
+    this._modalElement = document.createElement('div');
+    this._modalElement.className = 'fb-modal-box';
 
     /* Header */
-    const header = createElement('div', {
-      className: 'px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center'
-    });
-    
-    const titleEl = createElement('h3', {
-      className: 'text-lg font-semibold text-slate-900 dark:text-slate-100'
-    }, title);
+    const header = document.createElement('div');
+    header.className = 'fb-modal-header';
 
-    const closeBtn = createElement('button', {
-      className: 'text-slate-400 hover:text-slate-500 dark:hover:text-slate-300 focus:outline-none'
-    });
-    closeBtn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
-    
+    const titleEl = document.createElement('h3');
+    titleEl.className = 'fb-modal-title';
+    titleEl.textContent = title;
+
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'fb-modal-close';
+    closeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+
     const handleClose = () => {
       this._close();
       if (typeof onClose === 'function') onClose();
     };
-    
+
     closeBtn.addEventListener('click', handleClose);
     this._overlayElement.addEventListener('click', handleClose);
 
@@ -145,34 +136,34 @@ export class ModalManager {
     header.appendChild(closeBtn);
 
     /* Body */
-    const body = createElement('div', { className: 'px-6 py-4' });
-    
+    const body = document.createElement('div');
+    body.className = 'fb-modal-body';
+
     if (message) {
-      const msgEl = createElement('p', {
-        className: 'text-sm text-slate-600 dark:text-slate-300'
-      }, message);
+      const msgEl = document.createElement('p');
+      msgEl.className = 'fb-modal-message';
+      msgEl.textContent = message;
       body.appendChild(msgEl);
     }
-    
+
     if (contentElement) {
       body.appendChild(contentElement);
     }
 
     /* Footer / Buttons */
-    const footer = createElement('div', {
-      className: 'px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 flex justify-end gap-3'
-    });
+    const footer = document.createElement('div');
+    footer.className = 'fb-modal-footer';
 
     buttons.forEach(btn => {
-      const button = createElement('button', {
-        className: btn.className
-      }, btn.text);
-      
+      const button = document.createElement('button');
+      button.className = btn.className;
+      button.textContent = btn.text;
+
       button.addEventListener('click', () => {
         this._close();
         btn.onClick();
       });
-      
+
       footer.appendChild(button);
     });
 
@@ -180,16 +171,15 @@ export class ModalManager {
     this._modalElement.appendChild(header);
     this._modalElement.appendChild(body);
     this._modalElement.appendChild(footer);
-    modalContainer.appendChild(this._modalElement);
+    this._containerElement.appendChild(this._modalElement);
 
     document.body.appendChild(this._overlayElement);
-    document.body.appendChild(modalContainer);
+    document.body.appendChild(this._containerElement);
 
     /* Animate In */
     requestAnimationFrame(() => {
-      this._overlayElement.classList.remove('opacity-0');
-      this._modalElement.classList.remove('scale-95', 'opacity-0');
-      this._modalElement.classList.add('scale-100', 'opacity-100');
+      this._overlayElement.classList.add('fb-modal-overlay--visible');
+      this._modalElement.classList.add('fb-modal-box--visible');
       if (typeof onOpen === 'function') onOpen();
     });
   }
@@ -199,20 +189,20 @@ export class ModalManager {
    */
   _close() {
     if (this._modalElement && this._overlayElement) {
-      this._overlayElement.classList.add('opacity-0');
-      this._modalElement.classList.remove('scale-100', 'opacity-100');
-      this._modalElement.classList.add('scale-95', 'opacity-0');
-      
+      this._overlayElement.classList.remove('fb-modal-overlay--visible');
+      this._modalElement.classList.remove('fb-modal-box--visible');
+
       const overlay = this._overlayElement;
-      const modalParent = this._modalElement.parentElement;
-      
+      const container = this._containerElement;
+
       setTimeout(() => {
         overlay.remove();
-        if (modalParent) modalParent.remove();
+        if (container) container.remove();
       }, 200);
 
       this._modalElement = null;
       this._overlayElement = null;
+      this._containerElement = null;
     }
   }
 }

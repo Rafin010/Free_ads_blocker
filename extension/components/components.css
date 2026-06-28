@@ -1,0 +1,335 @@
+/* ===== Free Blocker — Shared Component Styles ===== */
+/* Toggle, Toast, Modal — Pure CSS, No Tailwind */
+
+/* ==============================
+   TOGGLE SWITCH
+   ============================== */
+
+.fb-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.fb-toggle-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fb-toggle-track {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: var(--text-muted, #94a3b8);
+  border-radius: 12px;
+  transition: background 0.3s ease;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.fb-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fb-toggle-input:checked + .fb-toggle-track {
+  background: var(--c-indigo, #6366f1);
+}
+
+.fb-toggle-input:checked + .fb-toggle-track .fb-toggle-thumb {
+  transform: translateX(20px);
+}
+
+.fb-toggle-input:focus-visible + .fb-toggle-track {
+  outline: 2px solid var(--c-indigo, #6366f1);
+  outline-offset: 2px;
+}
+
+.fb-toggle:hover .fb-toggle-track {
+  opacity: 0.9;
+}
+
+
+/* ==============================
+   TOAST NOTIFICATIONS
+   ============================== */
+
+.fb-toast-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 400px;
+  padding: 0 16px;
+  pointer-events: none;
+}
+
+.fb-toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 1px solid;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  pointer-events: auto;
+  width: 100%;
+  transform: translateY(30px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fb-toast--visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.fb-toast--exit {
+  transform: translateY(-10px);
+  opacity: 0;
+}
+
+.fb-toast-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.fb-toast-text {
+  font-size: 14px;
+  font-weight: 500;
+  flex: 1;
+}
+
+/* Toast Types */
+.fb-toast--success {
+  background: rgba(236, 253, 245, 0.95);
+  color: #059669;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.fb-toast--error {
+  background: rgba(255, 241, 242, 0.95);
+  color: #e11d48;
+  border-color: rgba(244, 63, 94, 0.25);
+}
+
+.fb-toast--warning {
+  background: rgba(255, 251, 235, 0.95);
+  color: #d97706;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.fb-toast--info {
+  background: rgba(238, 242, 255, 0.95);
+  color: #4f46e5;
+  border-color: rgba(99, 102, 241, 0.25);
+}
+
+/* Dark mode toast */
+html.dark .fb-toast--success {
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.2);
+}
+html.dark .fb-toast--error {
+  background: rgba(244, 63, 94, 0.1);
+  color: #fb7185;
+  border-color: rgba(244, 63, 94, 0.2);
+}
+html.dark .fb-toast--warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.2);
+}
+html.dark .fb-toast--info {
+  background: rgba(99, 102, 241, 0.1);
+  color: #818cf8;
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+
+/* ==============================
+   MODAL DIALOG
+   ============================== */
+
+.fb-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 9990;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.fb-modal-overlay--visible {
+  opacity: 1;
+}
+
+.fb-modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9991;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  pointer-events: none;
+}
+
+.fb-modal-box {
+  background: var(--bg-card, #ffffff);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 440px;
+  overflow: hidden;
+  pointer-events: auto;
+  border: 1px solid var(--border, #e2e8f0);
+  transform: scale(0.95);
+  opacity: 0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fb-modal-box--visible {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.fb-modal-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fb-modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary, #0f172a);
+}
+
+.fb-modal-close {
+  background: none;
+  border: none;
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.fb-modal-close:hover {
+  color: var(--text-primary, #0f172a);
+  background: var(--bg, #f8fafc);
+}
+
+.fb-modal-body {
+  padding: 20px 24px;
+}
+
+.fb-modal-message {
+  font-size: 14px;
+  color: var(--text-secondary, #475569);
+  line-height: 1.6;
+}
+
+.fb-modal-input-wrap {
+  margin-top: 16px;
+}
+
+.fb-modal-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 10px;
+  background: var(--bg, #f8fafc);
+  color: var(--text-primary, #0f172a);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.fb-modal-input:focus {
+  border-color: var(--c-indigo, #6366f1);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.fb-modal-footer {
+  padding: 16px 24px;
+  background: var(--bg, #f8fafc);
+  border-top: 1px solid var(--border, #e2e8f0);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.fb-modal-btn {
+  padding: 8px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fb-modal-btn--cancel {
+  background: var(--bg, #f8fafc);
+  color: var(--text-secondary, #475569);
+  border: 1px solid var(--border, #e2e8f0);
+}
+
+.fb-modal-btn--cancel:hover {
+  background: var(--border, #e2e8f0);
+}
+
+.fb-modal-btn--confirm {
+  background: var(--c-indigo, #6366f1);
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.fb-modal-btn--confirm:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
+}
+
+.fb-modal-btn--danger {
+  background: var(--c-rose, #f43f5e);
+  color: white;
+  box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
+}
+
+.fb-modal-btn--danger:hover {
+  background: #e11d48;
+  transform: translateY(-1px);
+}

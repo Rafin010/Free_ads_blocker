@@ -251,25 +251,61 @@ document.addEventListener('DOMContentLoaded', async () => {
    */
   function renderToggles() {
     /* Helper to create setting row */
-    const createRow = (id, title, description, checked, onChange) => {
+    const createRow = (id, title, description, checked, onChange, iconClass = null) => {
       const row = document.createElement('div');
-      row.className = 'flex items-center justify-between py-2';
+      row.className = 'settings-row py-2';
+      
+      const leftContent = document.createElement('div');
+      leftContent.style.display = 'flex';
+      leftContent.style.alignItems = 'center';
+      leftContent.style.gap = '16px';
+      leftContent.style.flex = '1';
+
+      if (iconClass) {
+        const iconWrapper = document.createElement('div');
+        iconWrapper.className = 'text-indigo bg-indigo-light';
+        iconWrapper.style.width = '36px';
+        iconWrapper.style.height = '36px';
+        iconWrapper.style.display = 'flex';
+        iconWrapper.style.alignItems = 'center';
+        iconWrapper.style.justifyContent = 'center';
+        iconWrapper.style.borderRadius = '10px';
+        iconWrapper.style.flexShrink = '0';
+        
+        if (iconClass === '18+') {
+          const textEl = document.createElement('span');
+          textEl.textContent = '18+';
+          textEl.style.fontWeight = '800';
+          textEl.style.fontSize = '14px';
+          iconWrapper.appendChild(textEl);
+        } else {
+          const iconEl = document.createElement('i');
+          iconEl.className = iconClass;
+          iconEl.style.fontSize = '16px';
+          iconWrapper.appendChild(iconEl);
+        }
+        
+        leftContent.appendChild(iconWrapper);
+      }
       
       const textContainer = document.createElement('div');
+      textContainer.className = 'row-info';
       const titleEl = document.createElement('div');
-      titleEl.className = 'font-medium text-slate-800 dark:text-slate-200';
+      titleEl.className = 'row-title';
       titleEl.textContent = title;
       
       const descEl = document.createElement('div');
-      descEl.className = 'text-sm text-slate-500 dark:text-slate-400 mt-0.5';
+      descEl.className = 'row-desc';
       descEl.textContent = description;
       
       textContainer.appendChild(titleEl);
       textContainer.appendChild(descEl);
       
+      leftContent.appendChild(textContainer);
+      
       const toggle = ToggleComponent.create({ id, checked, onChange });
       
-      row.appendChild(textContainer);
+      row.appendChild(leftContent);
       row.appendChild(toggle);
       return row;
     };
@@ -281,14 +317,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       currentSettings.showBadge,
       async (val) => {
         await chrome.runtime.sendMessage({ type: 'UPDATE_SETTINGS', data: { showBadge: val } });
-      }
+      },
+      'fa-solid fa-certificate'
     ));
     uiOptionsContainer.appendChild(createRow(
       'setting-notifications', 'Show Notifications', 'Show toast notifications for background updates',
       currentSettings.notifications,
       async (val) => {
         await chrome.runtime.sendMessage({ type: 'UPDATE_SETTINGS', data: { notifications: val } });
-      }
+      },
+      'fa-solid fa-bell'
     ));
 
     /* Advanced Filters */
@@ -298,6 +336,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const renderFeatureToggle = (featureId, container) => {
       const meta = FEATURE_META[featureId];
       if (!meta) return;
+      
+      const faIcons = {
+        [FEATURES.AUTO_FILTER_UPDATE]: 'fa-solid fa-rotate',
+        [FEATURES.YOUTUBE_ADS_BLOCK]: 'fa-brands fa-youtube',
+        [FEATURES.ADULT_WEBSITE_BLOCK]: '18+',
+        [FEATURES.ADULT_VIDEO_BLOCK]: '18+',
+        [FEATURES.SCAM_WEBSITE_DETECTION]: 'fa-solid fa-bug',
+        [FEATURES.TRACKING_PROTECTION]: 'fa-solid fa-eye-slash',
+        [FEATURES.COOKIE_PROTECTION]: 'fa-solid fa-cookie-bite'
+      };
+      const iconClass = faIcons[featureId] || 'fa-solid fa-shield-halved';
       
       container.appendChild(createRow(
         `feature-${featureId}`, meta.name, meta.description,
@@ -310,11 +359,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (featureId === FEATURES.AUTO_FILTER_UPDATE) {
             toast.show({ message: val ? 'Auto-updates enabled' : 'Auto-updates disabled', type: 'info' });
           }
-        }
+        },
+        iconClass
       ));
     };
 
     renderFeatureToggle(FEATURES.AUTO_FILTER_UPDATE, advancedFiltersContainer);
+    renderFeatureToggle(FEATURES.YOUTUBE_ADS_BLOCK, advancedFiltersContainer);
     renderFeatureToggle(FEATURES.ADULT_WEBSITE_BLOCK, advancedFiltersContainer);
     renderFeatureToggle(FEATURES.ADULT_VIDEO_BLOCK, advancedFiltersContainer);
     renderFeatureToggle(FEATURES.SCAM_WEBSITE_DETECTION, advancedFiltersContainer);
@@ -337,21 +388,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       whitelistList.innerHTML = '';
       
       if (whitelist.length === 0) {
-        whitelistList.innerHTML = '<li class="p-4 text-center text-slate-500 dark:text-slate-400 text-sm">No domains whitelisted.</li>';
+        whitelistList.innerHTML = '<li class="empty-state">No domains whitelisted.</li>';
         return;
       }
       
       whitelist.forEach(domain => {
         const li = document.createElement('li');
-        li.className = 'flex items-center justify-between p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group';
+        li.className = 'whitelist-item';
         
         const text = document.createElement('span');
-        text.className = 'text-sm font-medium text-slate-700 dark:text-slate-300';
+        text.className = 'whitelist-domain';
         text.textContent = domain;
         
         const btn = document.createElement('button');
-        btn.className = 'text-slate-400 hover:text-rose-500 p-1 rounded transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100';
-        btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>';
+        btn.className = 'whitelist-remove-btn';
+        btn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
         
         btn.addEventListener('click', async () => {
           await chrome.runtime.sendMessage({ type: 'REMOVE_WHITELIST', data: { domain } });
