@@ -1,0 +1,7 @@
+[
+  { "id": 1, "priority": 1, "action": { "type": "block" }, "condition": { "urlFilter": "||paypal-update-info.com^", "resourceTypes": ["main_frame", "sub_frame", "script", "image", "xmlhttprequest", "other"] } },
+  { "id": 2, "priority": 1, "action": { "type": "block" }, "condition": { "urlFilter": "||apple-id-verify.com^", "resourceTypes": ["main_frame", "sub_frame", "script", "image", "xmlhttprequest", "other"] } },
+  { "id": 3, "priority": 1, "action": { "type": "block" }, "condition": { "urlFilter": "||amazon-security-alert.com^", "resourceTypes": ["main_frame", "sub_frame", "script", "image", "xmlhttprequest", "other"] } },
+  { "id": 4, "priority": 1, "action": { "type": "block" }, "condition": { "urlFilter": "||microsoft-support-alert.com^", "resourceTypes": ["main_frame", "sub_frame", "script", "image", "xmlhttprequest", "other"] } },
+  { "id": 5, "priority": 1, "action": { "type": "block" }, "condition": { "urlFilter": "||chase-banking-update.com^", "resourceTypes": ["main_frame", "sub_frame", "script", "image", "xmlhttprequest", "other"] } }
+]

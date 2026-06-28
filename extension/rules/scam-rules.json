@@ -1,0 +1,7 @@
+[
+  { "id": 1, "priority": 1, "action": { "type": "block" }, "condition": { "urlFilter": "||free-crypto-giveaway.com^", "resourceTypes": ["main_frame", "sub_frame", "script", "image", "xmlhttprequest", "other"] } },
+  { "id": 2, "priority": 1, "action": { "type": "block" }, "condition": { "urlFilter": "||elon-musk-crypto.com^", "resourceTypes": ["main_frame", "sub_frame", "script", "image", "xmlhttprequest", "other"] } },
+  { "id": 3, "priority": 1, "action": { "type": "block" }, "condition": { "urlFilter": "||bitcoin-multiplier.net^", "resourceTypes": ["main_frame", "sub_frame", "script", "image", "xmlhttprequest", "other"] } },
+  { "id": 4, "priority": 1, "action": { "type": "block" }, "condition": { "urlFilter": "||binance-claim-reward.com^", "resourceTypes": ["main_frame", "sub_frame", "script", "image", "xmlhttprequest", "other"] } },
+  { "id": 5, "priority": 1, "action": { "type": "block" }, "condition": { "urlFilter": "||trustwallet-verify-node.com^", "resourceTypes": ["main_frame", "sub_frame", "script", "image", "xmlhttprequest", "other"] } }
+]

@@ -1,0 +1,7 @@
+[
+  { "id": 1, "priority": 1, "action": { "type": "block" }, "condition": { "urlFilter": "||connect.facebook.net/en_US/fbevents.js", "resourceTypes": ["script"] } },
+  { "id": 2, "priority": 1, "action": { "type": "block" }, "condition": { "urlFilter": "||ads.twitter.com^", "resourceTypes": ["main_frame", "sub_frame", "script", "image", "xmlhttprequest", "other"] } },
+  { "id": 3, "priority": 1, "action": { "type": "block" }, "condition": { "urlFilter": "||ads.tiktok.com^", "resourceTypes": ["main_frame", "sub_frame", "script", "image", "xmlhttprequest", "other"] } },
+  { "id": 4, "priority": 1, "action": { "type": "block" }, "condition": { "urlFilter": "||ads.linkedin.com^", "resourceTypes": ["main_frame", "sub_frame", "script", "image", "xmlhttprequest", "other"] } },
+  { "id": 5, "priority": 1, "action": { "type": "block" }, "condition": { "urlFilter": "||ads.pinterest.com^", "resourceTypes": ["main_frame", "sub_frame", "script", "image", "xmlhttprequest", "other"] } }
+]

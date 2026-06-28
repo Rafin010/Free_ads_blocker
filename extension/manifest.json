@@ -1,0 +1,116 @@
+{
+  "manifest_version": 3,
+  "name": "Free Blocker",
+  "version": "1.0.0",
+  "description": "Fast, lightweight ad blocker with complete control over blocking advertisements, trackers, malware, and unwanted content.",
+  "author": "Free Blocker Team",
+
+  "permissions": [
+    "storage",
+    "declarativeNetRequest",
+    "declarativeNetRequestFeedback",
+    "tabs",
+    "scripting",
+    "activeTab",
+    "alarms",
+    "notifications"
+  ],
+
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
+  "background": {
+    "service_worker": "background/background.js",
+    "type": "module"
+  },
+
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "32": "assets/icons/icon32.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
+    },
+    "default_title": "Free Blocker"
+  },
+
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "32": "assets/icons/icon32.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/content.js", "content/cosmetic-filter.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://www.youtube.com/*",
+        "https://m.youtube.com/*",
+        "https://youtube.com/*"
+      ],
+      "js": ["content/youtube-blocker.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ads_rules",
+        "enabled": true,
+        "path": "rules/ads-rules.json"
+      },
+      {
+        "id": "tracker_rules",
+        "enabled": true,
+        "path": "rules/tracker-rules.json"
+      },
+      {
+        "id": "malware_rules",
+        "enabled": true,
+        "path": "rules/malware-rules.json"
+      },
+      {
+        "id": "adult_rules",
+        "enabled": false,
+        "path": "rules/adult-rules.json"
+      },
+      {
+        "id": "phishing_rules",
+        "enabled": true,
+        "path": "rules/phishing-rules.json"
+      },
+      {
+        "id": "scam_rules",
+        "enabled": true,
+        "path": "rules/scam-rules.json"
+      },
+      {
+        "id": "social_ads_rules",
+        "enabled": false,
+        "path": "rules/social-ads-rules.json"
+      }
+    ]
+  },
+
+  "options_page": "pages/settings/settings.html",
+
+  "default_locale": "en",
+
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
+  },
+
+  "minimum_chrome_version": "110",
+
+  "offline_enabled": true
+}

@@ -1,0 +1,10 @@
+{
+  "extensionName": {
+    "message": "Free Blocker",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "Fast, lightweight ad blocker with complete control over blocking advertisements, trackers, malware, and unwanted content.",
+    "description": "Description of the extension"
+  }
+}
